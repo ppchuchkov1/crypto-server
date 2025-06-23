@@ -18,7 +18,7 @@ const TestModel = mongoose.model("Test", TestSchema);
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("Test upload new code to222");
+  // res.send("Test upload new code to222");
 });
 
 app.get("/ping-db", async (req, res) => {
