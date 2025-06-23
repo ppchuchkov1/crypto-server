@@ -27,9 +27,12 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - /etc/letsencrypt/live/ppchu.com/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
-      - /etc/letsencrypt/live/ppchu.com/privkey.pem:/etc/ssl/private/privkey.pem:ro
+      # ТУК ВНИМАНИЕ — това го сменяш за dev или prod:
+      - ./nginx/default.dev.conf:/etc/nginx/conf.d/default.conf
+
+      # Тези само за production:
+      # - /etc/letsencrypt/live/ppchu.com/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+      # - /etc/letsencrypt/live/ppchu.com/privkey.pem:/etc/ssl/private/privkey.pem:ro
     depends_on:
       - app
     restart: always
