@@ -11,9 +11,6 @@ yarn-error.log*
 # Environment variables
 .env
 
-# Docker override files
-docker-compose.override.yml
-docker-compose.override.yaml
 
 # VSCode settings
 .vscode/
