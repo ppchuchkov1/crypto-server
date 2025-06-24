@@ -5,27 +5,39 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile.prod
-    container_name: banking_app
+    container_name: crypto_app
     restart: always
     ports:
       - "5000:5000"
     depends_on:
       - mongo
+      - redis
     environment:
       - NODE_ENV=production
-      - MONGO_URI=mongodb://mongo:27017/banking
+      - MONGO_URI=mongodb://mongo:27017/crypto
+      - REDIS_URL=redis://redis:6379
 
   mongo:
     image: mongo:7
-    container_name: banking_mongo
+    container_name: crypto_mongo
     ports:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
 
+  redis:
+    image: redis:7-alpine
+    container_name: crypto_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+    command: redis-server --appendonly yes
+
   nginx:
     image: nginx:stable-alpine
-    container_name: banking_nginx
+    container_name: crypto_nginx
     ports:
       - "80:80"
       - "443:443"
@@ -39,3 +51,4 @@ services:
 
 volumes:
   mongodb_data:
+  redis_data:
