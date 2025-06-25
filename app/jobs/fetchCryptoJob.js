@@ -22,8 +22,21 @@ const fetchCryptoJob = () => {
           }
         );
 
-        await redis.set("cryptoData", JSON.stringify(data));
-        console.log("✅ Crypto data cached in Redis");
+        const filteredData = data.map((coin) => ({
+          id: coin.id,
+          symbol: coin.symbol,
+          name: coin.name,
+          image: coin.image,
+          current_price: coin.current_price,
+          market_cap: coin.market_cap,
+          market_cap_rank: coin.market_cap_rank,
+          price_change_percentage_24h: coin.price_change_percentage_24h,
+          total_supply: coin.total_supply,
+          max_supply: coin.max_supply,
+        }));
+
+        await redis.set("cryptoData", JSON.stringify(filteredData));
+        console.log(`✅ Crypto data cached in Redis (${filteredData.length})`);
       } catch (error) {
         console.error(
           "❌ Error fetching or saving crypto data:",
