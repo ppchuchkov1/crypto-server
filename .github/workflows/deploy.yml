@@ -20,4 +20,4 @@ jobs:
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Run deploy script on EC2
-        run: ssh -i ~/.ssh/id_ed25519 ubuntu@${{ secrets.EC2_HOST }} 'bash /home/ubuntu/my-folder/deploy.sh'
+        run: ssh -i ~/.ssh/id_ed25519 ubuntu@${{ secrets.EC2_HOST }} 'bash /home/ubuntu/crypto-app/deploy.sh'
