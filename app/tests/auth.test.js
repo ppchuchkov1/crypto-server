@@ -12,14 +12,10 @@ describe("Auth Controller basic tests", () => {
 
   describe("register", () => {
     it("should register a new user successfully", async () => {
-      // Мокваме findOne да върне null => няма такъв потребител
       User.findOne.mockResolvedValue(null);
-      // Мокваме save функцията на новия user
       User.prototype.save = jest.fn().mockResolvedValue(true);
-      // Мокваме bcrypt.hash да върне фиксиран хеш
       jest.spyOn(bcrypt, "hash").mockResolvedValue("hashedPassword123");
 
-      // Мокваме req и res обекти
       const req = { body: { email: "newuser@test.com", password: "123456" } };
       const res = {
         status: jest.fn(() => res),
@@ -31,7 +27,9 @@ describe("Auth Controller basic tests", () => {
       expect(User.findOne).toHaveBeenCalledWith({ email: "newuser@test.com" });
       expect(bcrypt.hash).toHaveBeenCalledWith("123456", 10);
       expect(User.prototype.save).toHaveBeenCalled();
-      expect(res.status).toHaveBeenCalledWith(201);
+
+      expect(res.status).toHaveBeenCalledWith(500); // реално статусът е 201, затова тестът ще падне
+
       expect(res.json).toHaveBeenCalledWith({
         message: "User registered successfully",
       });
