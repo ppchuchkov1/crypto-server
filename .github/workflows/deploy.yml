@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Test & Deploy to EC2
 
 on:
   push:
@@ -6,11 +6,17 @@ on:
       - main
 
 jobs:
-  deploy:
+  test-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Install all dependencies (incl. devDependencies)
+        run: npm install
+
+      - name: Run Jest tests
+        run: npm test
 
       - name: Setup SSH
         run: |
