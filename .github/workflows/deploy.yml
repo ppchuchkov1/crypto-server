@@ -12,11 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install all dependencies (incl. devDependencies)
+      - name: Install dependencies (incl. devDependencies)
         run: npm install
+        working-directory: ./app
 
       - name: Run Jest tests
         run: npm test
+        working-directory: ./app
 
       - name: Setup SSH
         run: |
