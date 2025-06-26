@@ -28,7 +28,7 @@ describe("Auth Controller basic tests", () => {
       expect(bcrypt.hash).toHaveBeenCalledWith("123456", 10);
       expect(User.prototype.save).toHaveBeenCalled();
 
-      expect(res.status).toHaveBeenCalledWith(500); // реално статусът е 201, затова тестът ще падне
+      expect(res.status).toHaveBeenCalledWith(201);
 
       expect(res.json).toHaveBeenCalledWith({
         message: "User registered successfully",
