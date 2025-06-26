@@ -1,7 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const jwtSecret = "supersecretkey123"; // hardcoded secret\
 
 const register = async (req, res) => {
   try {
@@ -35,8 +34,7 @@ const login = async (req, res) => {
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) return res.status(400).json({ message: "Wrong password" });
 
-    // ПРОМЕНЕНО ТУК: изпращаме `id` в payload-а
-    const token = jwt.sign({ id: user._id }, jwtSecret, {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
 

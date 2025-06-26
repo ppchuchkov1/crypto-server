@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const jwtSecret = "supersecretkey123";
 
 module.exports = function verifyToken(req, res, next) {
   const authHeader = req.headers["authorization"];
@@ -9,9 +8,9 @@ module.exports = function verifyToken(req, res, next) {
   const token = authHeader.split(" ")[1];
   if (!token) return res.status(401).json({ message: "Malformed token" });
 
-  jwt.verify(token, jwtSecret, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) return res.status(403).json({ message: "Invalid token" });
-    // Останалото е същото:
+
     req.user = { id: decoded.id };
     next();
   });

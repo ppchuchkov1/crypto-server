@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Crypto API is working ТЕСТТТ");
+  res.send("Crypto API is working");
 });
 
 app.use("/api/crypto", cryptoRoutes);

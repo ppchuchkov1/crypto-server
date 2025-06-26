@@ -12,10 +12,11 @@ services:
     depends_on:
       - mongo
       - redis
+
     environment:
-      - NODE_ENV=production
       - MONGO_URI=mongodb://mongo:27017/crypto
       - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=supersecretkey123
 
   mongo:
     image: mongo:7
