@@ -12,6 +12,9 @@ services:
       - MONGO_URI=mongodb://mongo:27017/crypto
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=supersecretkey123
+      - STRIPE_SECRET_KEY=sk_test_51Hkv2kGETpcP6ndNX7BE2xIyofmsBUGXK2yFyxI7S7FOnfABvGbCzKnoif39gJHBlb9NixcbcmurVimVJ3KoorFG00SoLPy2w6
+      - STRIPE_WEBHOOK_SECRET=whsec_mc5Gr65owVHoKUDwiTN02aHH37V5RPiB
+
     ports:
       - "5000:5000"
     depends_on:
