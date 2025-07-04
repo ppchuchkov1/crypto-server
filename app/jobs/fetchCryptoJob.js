@@ -3,9 +3,9 @@ const axios = require("axios");
 const redis = require("../config/redis");
 
 const fetchCryptoJob = () => {
-  // every day in 10:00
+  // every mouth 10th
   cron.schedule(
-    "0 10 * * *",
+    "0 10 10 * *",
     async () => {
       try {
         console.log("🕙 Fetching crypto data from CoinGecko...");

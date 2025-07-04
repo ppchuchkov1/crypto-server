@@ -1,35 +1,32 @@
-const { getPortfolio } = require("../controllers/portfolioController");
-const Portfolio = require("../models/portfolioModel");
+const { getWallet } = require("../wallet/wallet.controller");
+const Wallet = require("../wallet/wallet.model");
 
-jest.mock("../models/portfolioModel");
+jest.mock("../wallet/wallet.model");
 
-describe("Portfolio Controller - getPortfolio", () => {
+describe("Wallet Controller - getWallet", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
-  it("should create and return a new portfolio if none found", async () => {
-    // findOne връща null -> няма портфолио
-    Portfolio.findOne.mockResolvedValue(null);
+  it("should create and return a new wallet if none found", async () => {
+    Wallet.findOne.mockResolvedValue(null);
 
-    // Мока на конструктора на Portfolio с метода save
     const mockSave = jest.fn().mockResolvedValue(true);
-    const mockPortfolioInstance = {
+    const mockWalletInstance = {
       userId: "user123",
       usdBalance: 1000,
       currencies: [],
       save: mockSave,
     };
 
-    Portfolio.mockImplementation((data) => {
-      // Проверяваме дали конструкторът е извикан с правилните данни
+    Wallet.mockImplementation((data) => {
       expect(data).toEqual({
         userId: "user123",
         usdBalance: 1000,
         currencies: [],
       });
-      return mockPortfolioInstance;
+      return mockWalletInstance;
     });
 
     const req = { user: { id: "user123" } };
@@ -38,10 +35,10 @@ describe("Portfolio Controller - getPortfolio", () => {
       json: jest.fn(),
     };
 
-    await getPortfolio(req, res);
+    await getWallet(req, res);
 
-    expect(Portfolio.findOne).toHaveBeenCalledWith({ userId: "user123" });
-    expect(Portfolio).toHaveBeenCalledWith({
+    expect(Wallet.findOne).toHaveBeenCalledWith({ userId: "user123" });
+    expect(Wallet).toHaveBeenCalledWith({
       userId: "user123",
       usdBalance: 1000,
       currencies: [],
@@ -49,17 +46,17 @@ describe("Portfolio Controller - getPortfolio", () => {
     expect(mockSave).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
-      portfolio: mockPortfolioInstance,
+      wallet: mockWalletInstance,
     });
   });
 
-  it("should return existing portfolio if found", async () => {
-    const mockPortfolio = {
+  it("should return existing wallet if found", async () => {
+    const mockWallet = {
       userId: "user123",
       usdBalance: 1500,
       currencies: [],
     };
-    Portfolio.findOne.mockResolvedValue(mockPortfolio);
+    Wallet.findOne.mockResolvedValue(mockWallet);
 
     const req = { user: { id: "user123" } };
     const res = {
@@ -67,15 +64,15 @@ describe("Portfolio Controller - getPortfolio", () => {
       json: jest.fn(),
     };
 
-    await getPortfolio(req, res);
+    await getWallet(req, res);
 
-    expect(Portfolio.findOne).toHaveBeenCalledWith({ userId: "user123" });
+    expect(Wallet.findOne).toHaveBeenCalledWith({ userId: "user123" });
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({ portfolio: mockPortfolio });
+    expect(res.json).toHaveBeenCalledWith({ wallet: mockWallet });
   });
 
   it("should handle errors and return 500", async () => {
-    Portfolio.findOne.mockRejectedValue(new Error("DB error"));
+    Wallet.findOne.mockRejectedValue(new Error("DB error"));
 
     const req = { user: { id: "user123" } };
     const res = {
@@ -83,12 +80,12 @@ describe("Portfolio Controller - getPortfolio", () => {
       json: jest.fn(),
     };
 
-    await getPortfolio(req, res);
+    await getWallet(req, res);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: "Server error" });
     expect(console.error).toHaveBeenCalledWith(
-      "Get portfolio error:",
+      "Get wallet error:",
       expect.any(Error)
     );
   });

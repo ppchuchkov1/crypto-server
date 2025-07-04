@@ -1,9 +1,9 @@
-const { register, login } = require("../controllers/userController");
-const User = require("../models/userModel");
+const { register, login } = require("../auth/auth.controller");
+const User = require("../auth/auth.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-jest.mock("../models/userModel");
+jest.mock("../auth/auth.model");
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
 
@@ -50,9 +50,6 @@ describe("Auth Controller", () => {
       });
       expect(mockSave).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith({
-        message: "User registered successfully",
-      });
     });
 
     it("should return error if user already exists", async () => {

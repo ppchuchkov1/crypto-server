@@ -1,6 +1,5 @@
 const express = require("express");
-const { getCryptoData } = require("../controllers/cryptoController");
-const { buyCrypto, sellCrypto } = require("../controllers/cryptoController");
+const { getCryptoData, buyCrypto, sellCrypto } = require("./crypto.controller");
 const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
 
