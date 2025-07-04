@@ -3,7 +3,7 @@ const {
   getWallet,
   createDepositCheckoutSession,
   handleDepositWebhook,
-} = require("../controllers/wallet.controller");
+} = require("./wallet.controller");
 const verifyToken = require("../middleware/verifyToken");
 
 const router = express.Router();
