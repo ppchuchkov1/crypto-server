@@ -9,9 +9,11 @@ const router = express.Router();
 
 router.post(
   "/create-deposit-checkout-session",
+  express.json(),
   verifyToken,
   createDepositCheckoutSession
 );
+
 router.post(
   "/webhook",
   express.raw({ type: "application/json" }),
