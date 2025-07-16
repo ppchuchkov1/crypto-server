@@ -1,7 +1,7 @@
-const { getWallet } = require("../wallet/wallet.controller");
-const Wallet = require("../wallet/wallet.model");
+const { getWallet } = require("../api/wallet/wallet.controller");
+const Wallet = require("../api/wallet/wallet.model");
 
-jest.mock("../wallet/wallet.model");
+jest.mock("../api/wallet/wallet.model");
 
 describe("Wallet Controller - getWallet", () => {
   beforeEach(() => {

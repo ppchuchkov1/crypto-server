@@ -1,9 +1,9 @@
-const { register, login } = require("../auth/auth.controller");
-const User = require("../auth/auth.model");
+const { register, login } = require("../api/auth/auth.controller");
+const User = require("../api/auth/auth.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-jest.mock("../auth/auth.model");
+jest.mock("../api/auth/auth.model");
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
 
