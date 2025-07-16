@@ -10,13 +10,10 @@ app.listen(PORT, () => {
 
 (async () => {
   try {
-    //Redis connection
     await redisClient.connect();
 
-    //Mongo connection
     await connectDB();
 
-    //Save crypto in Redis from CoinGecko by CronJob
     fetchCryptoJob();
   } catch (error) {
     console.warn("⚠️ Optional service failed:", error.message);

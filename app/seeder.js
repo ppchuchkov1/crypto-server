@@ -1,7 +1,8 @@
 const redisClient = require("./config/redis");
 const axios = require("axios");
+const { v4: uuidv4 } = require("uuid");
 
-// NFT колекции (без излишни полета)
+// nft collections
 const collections = [
   {
     name: "Azuki",
@@ -23,7 +24,10 @@ const collections = [
   },
 ];
 
-// Функция за взимане NFT-та от OpenSea API
+// fixed eth price
+const ETH_TO_USD = 3200;
+
+// fetch nft collections from opensea api
 async function fetchNFTData(contractAddress, limit = 10) {
   try {
     const response = await axios.get(
@@ -33,12 +37,11 @@ async function fetchNFTData(contractAddress, limit = 10) {
         headers: {
           Accept: "application/json",
           "User-Agent": "NFT-Seeder/1.0",
-          "x-api-key": "d6821387e7ed412698bfc08f3b456be9", // По желание, ако имаш
+          "x-api-key": "d6821387e7ed412698bfc08f3b456be9",
         },
       }
     );
     const nfts = response.data.nfts || [];
-    // Връщаме само NFT-та със снимки (image_url или display_image_url)
     return nfts.filter(
       (nft) =>
         nft.image_url ||
@@ -51,28 +54,29 @@ async function fetchNFTData(contractAddress, limit = 10) {
   }
 }
 
-// Проста функция за генериране рандъм цена в рамките на priceRange
-function generatePrice(min, max) {
-  return Math.round((min + Math.random() * (max - min)) * 1000) / 1000;
+// generate price
+function generateUSDPrice(min, max) {
+  const eth = min + Math.random() * (max - min);
+  const usd = eth * ETH_TO_USD;
+  return Math.round(usd * 100) / 100;
 }
 
-// Обогатяване NFT с необходимите полета
+// update nfts
 function enrichNFT(nft, collection) {
   return {
-    id: nft.identifier || nft.token_id || "unknown",
+    id: uuidv4(),
     name: nft.name || `${collection.name} #${nft.identifier || nft.token_id}`,
     description: nft.description || collection.description,
-    image_url:
-      nft.image_url ||
-      nft.display_image_url ||
-      (nft.metadata && nft.metadata.image) ||
-      null,
-    price_eth: generatePrice(
+    image:
+      nft.image_url || nft.display_image_url || nft.metadata?.image || null,
+    usdPrice: generateUSDPrice(
       collection.priceRange.min,
       collection.priceRange.max
     ),
     collection: collection.name,
     contract: collection.contract,
+    ownerId: null,
+    isListed: true,
   };
 }
 
@@ -80,7 +84,7 @@ async function seedNFTCollectionsToRedis() {
   try {
     await redisClient.connect();
 
-    const allCollections = {};
+    const allNFTs = [];
 
     for (const col of collections) {
       console.log(`🔄 Взимаме NFT-та за: ${col.name}`);
@@ -91,15 +95,12 @@ async function seedNFTCollectionsToRedis() {
       }
 
       const enrichedNFTs = rawNFTs.map((nft) => enrichNFT(nft, col));
+      allNFTs.push(...enrichedNFTs);
 
-      allCollections[col.name.toLowerCase()] = enrichedNFTs;
-
-      // Малка пауза да не претоварваме API-то
       await new Promise((r) => setTimeout(r, 2000));
     }
 
-    // Записваме всички колекции като един обект JSON под ключ "nft_collections"
-    await redisClient.set("nft_collections", JSON.stringify(allCollections));
+    await redisClient.set("nft_collections", JSON.stringify(allNFTs));
 
     console.log("✅ Seed процесът завърши успешно!");
   } catch (error) {

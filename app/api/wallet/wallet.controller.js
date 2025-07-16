@@ -6,7 +6,12 @@ const getWallet = async (req, res) => {
 
     let wallet = await Wallet.findOne({ userId });
     if (!wallet) {
-      wallet = new Wallet({ userId, usdBalance: 1000, currencies: [] });
+      wallet = new Wallet({
+        userId,
+        usdBalance: 1000,
+        currencies: [],
+        nfts: [],
+      });
       await wallet.save();
     }
 

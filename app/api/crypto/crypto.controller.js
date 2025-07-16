@@ -1,4 +1,4 @@
-const redisClient = require("../config/redis");
+const redisClient = require("../../config/redis");
 const User = require("../auth/auth.model");
 const Wallet = require("../wallet/wallet.model");
 const Transaction = require("../transactions/transaction.model");

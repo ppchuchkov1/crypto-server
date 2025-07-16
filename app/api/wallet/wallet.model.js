@@ -9,6 +9,17 @@ const CurrencySchema = new mongoose.Schema(
   { _id: false }
 );
 
+const NFTScheme = new mongoose.Schema({
+  id: String,
+  name: String,
+  description: String,
+  image: String,
+  usdPrice: Number,
+  collection: String,
+  contract: String,
+  isListed: Boolean,
+});
+
 const WalletSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -20,6 +31,7 @@ const WalletSchema = new mongoose.Schema({
   currencies: { type: [CurrencySchema], default: [] },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  nfts: { type: [NFTScheme], default: [] },
 });
 
 module.exports = mongoose.model("Wallet", WalletSchema);
