@@ -49,6 +49,7 @@ services:
       - nginx-logs:/var/log/nginx
     depends_on:
       - app
+      - grafana
     restart: always
 
   loki:
