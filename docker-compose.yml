@@ -49,40 +49,9 @@ services:
       - nginx-logs:/var/log/nginx
     depends_on:
       - app
-      - grafana
     restart: always
-
-  loki:
-    image: grafana/loki:2.9.0
-    container_name: loki
-    ports:
-      - "3100:3100"
-    command: -config.file=/etc/loki/local-config.yaml -ingester.wal-enabled=true -ingester.wal-dir=/tmp/loki/wal
-    volumes:
-      - ./loki-config.yaml:/etc/loki/local-config.yaml
-    restart: always
-
-  promtail:
-    image: grafana/promtail:2.9.0
-    container_name: promtail
-    volumes:
-      - ./promtail-config.yaml:/etc/promtail/config.yaml
-      - nginx-logs:/var/log/nginx
-    command: -config.file=/etc/promtail/config.yaml
-    restart: always
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    restart: always
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_SERVER_ROOT_URL=https://ppchu.com/logs
-    volumes:
-      - grafana-data:/var/lib/grafana
 
 volumes:
   mongodb_data:
   redis_data:
-  grafana-data:
   nginx-logs:
