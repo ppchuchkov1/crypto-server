@@ -40,17 +40,22 @@ const updateSlotBalance = async (req, res) => {
       return res.status(404).json({ message: "Wallet not found" });
     }
 
+    // Изчисляваме новата сума
     let newBalance;
     if (isWin) {
+      // При печалба: добавяме печалбата към баланса
       newBalance = wallet.usdBalance + winAmount;
     } else {
+      // При загуба: изваждаме залога от баланса
       newBalance = wallet.usdBalance - betAmount;
     }
 
+    // Проверяваме дали новата сума не е отрицателна
     if (newBalance < 0) {
       return res.status(400).json({ message: "Insufficient balance" });
     }
 
+    // Обновяваме баланса
     wallet.usdBalance = newBalance;
     wallet.updatedAt = new Date();
     await wallet.save();
